@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -29,6 +28,8 @@ class ViewController: UIViewController {
         brokenlineV.backgroundColor = UIColor.white
         self.view.addSubview(brokenlineV)
         brokenlineV.drawBrokenline(true)
+
+
     }
 
 }

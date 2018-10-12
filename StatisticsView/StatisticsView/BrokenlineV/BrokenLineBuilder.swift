@@ -24,8 +24,8 @@ class BrokenLineBuilder: NSObject {
     var xTextColor: CGColor? ///   - xTextColor: x轴字体颜色
     var xUnitTextColor: CGColor? ///   - xUnitTextColor: x轴单位字体颜色
     var ybgColor: CGColor? ///   - ybgcolor: y轴背景颜色
-    var yTextColor: CGColor? ///   - yTextColor: x轴字体颜色
-    var yUnitTextColor: CGColor? ///   - yUnitTextColor: x轴单位字体颜色
+    var yTextColor: CGColor? ///   - yTextColor: y轴字体颜色
+    var yUnitTextColor: CGColor? ///   - yUnitTextColor: y轴单位字体颜色
 
     var originPoint: CGPoint? /// 原点坐标
 
@@ -89,7 +89,6 @@ class BrokenLineBuilder: NSObject {
     func builderNewBrokenlineV() -> BrokenLineView {
         let brokenlineV = BrokenLineView.init(frame: frame)
         brokenlineV.builder = self
-        brokenlineV.adapter =  adapter
         brokenlineV.initView()
         return brokenlineV
     }

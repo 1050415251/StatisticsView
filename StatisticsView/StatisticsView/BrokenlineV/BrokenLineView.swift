@@ -25,6 +25,7 @@ class BrokenLineView: UIView {
     private var xLayer: CALayer!
     private var yLayer: CALayer!
     private var scrollLayer: CAScrollLayer!
+    private var dataLayer: CAShapeLayer!
 
     private let default_color = UIColor.black
 
@@ -48,6 +49,7 @@ class BrokenLineView: UIView {
 
     // TODO: -初始化view
     func initView() {
+        
 
         drawX()
         drawY()
@@ -208,7 +210,17 @@ class BrokenLineView: UIView {
         dataLayer.fillColor = UIColor.clear.cgColor
         path.fill()
         scrollLayer.addSublayer(dataLayer)
+        self.dataLayer = dataLayer
+    }
 
+    private func drawAnimation() {
+        let animation = CABasicAnimation.init(keyPath: "strokeEnd")
+        animation.duration = 5.0
+        animation.repeatCount = 1
+        animation.isRemovedOnCompletion = false
+        animation.fromValue = 0.0
+        animation.toValue = 1
+        self.dataLayer.add(animation, forKey: nil)
     }
 
     func drawBrokenline(_ animated: Bool) {
@@ -218,9 +230,7 @@ class BrokenLineView: UIView {
         if animated {
             drawUnitData()
             drawData()
-            UIView.animate(withDuration: 0.25, animations: {
-                self.layoutIfNeeded()
-            })
+            drawAnimation()
         }else {
             drawUnitData()
             drawData()
