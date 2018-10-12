@@ -12,6 +12,9 @@
 		FD093D4C21703A4100588B2D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD093D4A21703A4100588B2D /* Main.storyboard */; };
 		FD093D4E21703A4200588B2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD093D4D21703A4200588B2D /* Assets.xcassets */; };
 		FD093D5121703A4200588B2D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD093D4F21703A4200588B2D /* LaunchScreen.storyboard */; };
+		FD093D5921703A8F00588B2D /* BrokenLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD093D5821703A8F00588B2D /* BrokenLineView.swift */; };
+		FD093D5B21703BD800588B2D /* BrokenLineAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD093D5A21703BD800588B2D /* BrokenLineAdapter.swift */; };
+		FD093D5E217040D800588B2D /* BrokenLineBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD093D5D217040D800588B2D /* BrokenLineBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,9 @@
 		FD093D4D21703A4200588B2D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD093D5021703A4200588B2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FD093D5221703A4200588B2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FD093D5821703A8F00588B2D /* BrokenLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokenLineView.swift; sourceTree = "<group>"; };
+		FD093D5A21703BD800588B2D /* BrokenLineAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokenLineAdapter.swift; sourceTree = "<group>"; };
+		FD093D5D217040D800588B2D /* BrokenLineBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokenLineBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,12 +62,23 @@
 			children = (
 				FD093D4621703A4100588B2D /* AppDelegate.swift */,
 				FD093D4821703A4100588B2D /* ViewController.swift */,
+				FD093D5C21703E4C00588B2D /* BrokenlineV */,
 				FD093D4A21703A4100588B2D /* Main.storyboard */,
 				FD093D4D21703A4200588B2D /* Assets.xcassets */,
 				FD093D4F21703A4200588B2D /* LaunchScreen.storyboard */,
 				FD093D5221703A4200588B2D /* Info.plist */,
 			);
 			path = StatisticsView;
+			sourceTree = "<group>";
+		};
+		FD093D5C21703E4C00588B2D /* BrokenlineV */ = {
+			isa = PBXGroup;
+			children = (
+				FD093D5D217040D800588B2D /* BrokenLineBuilder.swift */,
+				FD093D5A21703BD800588B2D /* BrokenLineAdapter.swift */,
+				FD093D5821703A8F00588B2D /* BrokenLineView.swift */,
+			);
+			path = BrokenlineV;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,7 +153,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD093D4921703A4100588B2D /* ViewController.swift in Sources */,
+				FD093D5E217040D800588B2D /* BrokenLineBuilder.swift in Sources */,
+				FD093D5B21703BD800588B2D /* BrokenLineAdapter.swift in Sources */,
 				FD093D4721703A4100588B2D /* AppDelegate.swift in Sources */,
+				FD093D5921703A8F00588B2D /* BrokenLineView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
