@@ -23,8 +23,8 @@ class ViewController: UIViewController {
             builder.frame = CGRect.init(x: 30, y: 80, width: 354, height: 250)
             builder.xunit = "月"
             builder.yunit = "元"
-            builder.xdistance = 80
-            builder.ydistance = 50
+            builder.xdistance = 30
+            builder.ydistance = 30
         }
         brokenlineV.adapter = self
         brokenlineV.backgroundColor = UIColor.white
