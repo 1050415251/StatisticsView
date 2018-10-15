@@ -25,9 +25,13 @@ class BrokenLineView: UIView {
     private var xLayer: CALayer!
     private var yLayer: CALayer!
     private var scrollLayer: CAScrollLayer!
+    private var xScrollLayer: CAScrollLayer!
+    private var yScrollLayer: CAScrollLayer!
     private var dataLayer: CAShapeLayer!
 
     private let default_color = UIColor.black
+    private let default_xdistance:CGFloat = 25
+    private let default_ydistance:CGFloat = 25
 
     // MARK: -初始化折线图控件
     class func newInstanceBrokenlineV(_ callback:((BrokenLineBuilder)->Void)?) -> BrokenLineView {
@@ -53,7 +57,13 @@ class BrokenLineView: UIView {
 
         drawX()
         drawY()
+        addGesture()
+    }
 
+    private func addGesture() {
+        self.isUserInteractionEnabled = true
+        let pan = UIPanGestureRecognizer.init(target: self, action: #selector(panGesture(sender:)))
+        self.addGestureRecognizer(pan)
     }
 
     private func drawX() {
@@ -127,8 +137,7 @@ class BrokenLineView: UIView {
         self.layer.addSublayer(yTextLayer)
     }
 
-    // TODO: 绘制数据
-    private func drawUnitData() {
+    private func drawMainLayer() {
         let point = builder.originPoint ?? CGPoint.init(x: 30, y: self.frame.height - 30)
         let size = CGSize.init(width:builder.yWidth ?? 1 , height: self.frame.height - (self.frame.height - point.y) * 2)
         let realpoint = CGPoint.init(x: point.x, y: point.y - size.height)
@@ -136,22 +145,38 @@ class BrokenLineView: UIView {
         let xframe =  CGRect.init(origin:point ,size: CGSize.init(width: self.frame.width - point.x * 2, height: builder.xWidth ?? 1))
         let yframe =  CGRect.init(origin:realpoint ,size: size)
 
-
         let scrolllayer = CAScrollLayer()
         scrolllayer.scrollMode = .both
-        scrolllayer.frame = CGRect.init(x: yframe.maxX, y: yframe.maxY - (builder.ydistance ?? 25) * CGFloat(adapter.ysections.count), width: xframe.width - 30, height:(builder.ydistance ?? 25) * CGFloat(adapter.ysections.count))
+        scrolllayer.frame = CGRect.init(x: yframe.maxX, y: yframe.minY + 30, width: xframe.width - 30, height: yframe.size.height - 30)
         scrolllayer.backgroundColor = UIColor.red.cgColor
         self.layer.addSublayer(scrolllayer)
         self.scrollLayer = scrolllayer
+    }
+
+    // TODO: 绘制x数据
+    private func drawXUnitData() {
+        let point = builder.originPoint ?? CGPoint.init(x: 30, y: self.frame.height - 30)
+        let size = CGSize.init(width:builder.yWidth ?? 1 , height: self.frame.height - (self.frame.height - point.y) * 2)
+        let realpoint = CGPoint.init(x: point.x, y: point.y - size.height)
+
+       // let xframe =  CGRect.init(origin:point ,size: CGSize.init(width: self.frame.width - point.x * 2, height: builder.xWidth ?? 1))
+        let yframe =  CGRect.init(origin:realpoint ,size: size)
+
+
+        xScrollLayer = CAScrollLayer()
+        xScrollLayer.scrollMode = .horizontally
+        xScrollLayer.frame = CGRect.init(x: yframe.maxX, y: scrollLayer.frame.maxY - 5, width: scrollLayer.frame.width, height:30)
+        //xScrollLayer.backgroundColor = UIColor.green.cgColor
+        self.layer.addSublayer(xScrollLayer)
 
         //TODO: 添加x轴
         let xArr = adapter.xsections
         for (index,xdata) in xArr.enumerated() {
-            let midX = (builder.xdistance ?? 25) * CGFloat(index + 1)
+            let midX = (builder.xdistance ?? default_xdistance) * CGFloat(index + 1)
             let linelayer = CALayer()
-            linelayer.frame = CGRect.init(x: midX, y: scrolllayer.frame.height - 5, width: 1, height: 5)
+            linelayer.frame = CGRect.init(x: midX, y: 0, width: 1, height: 5)
             linelayer.backgroundColor = builder.xbgColor ?? default_color.cgColor
-            scrolllayer.addSublayer(linelayer)
+            xScrollLayer.addSublayer(linelayer)
 
             let xTextLayer = CATextLayer()
             xTextLayer.string = "\(xdata)"
@@ -159,43 +184,59 @@ class BrokenLineView: UIView {
             xTextLayer.alignmentMode = .center
             xTextLayer.contentsScale = UIScreen.main.scale
             xTextLayer.bounds = CGRect.init(x: 0, y: 0, width: 15, height: 15)
-            xTextLayer.position = CGPoint.init(x: yframe.maxX + midX , y: xframe.maxY + 20)
+            xTextLayer.position = CGPoint.init(x: midX , y: 15)
             xTextLayer.foregroundColor = builder.xUnitTextColor ?? (builder.xbgColor ?? UIColor.black.cgColor)
-            self.layer.addSublayer(xTextLayer)
+            xScrollLayer.addSublayer(xTextLayer)
         }
 
+
+    }
+
+     // TODO: 绘制yzhou数据
+    private func drawYUnitData() {
+
+        let point = builder.originPoint ?? CGPoint.init(x: 30, y: self.frame.height - 30)
+        let size = CGSize.init(width:builder.yWidth ?? 1 , height: self.frame.height - (self.frame.height - point.y) * 2)
+        let realpoint = CGPoint.init(x: point.x, y: point.y - size.height)
+
+        let xframe =  CGRect.init(origin:point ,size: CGSize.init(width: self.frame.width - point.x * 2, height: builder.xWidth ?? 1))
+        let yframe =  CGRect.init(origin:realpoint ,size: size)
+
+        yScrollLayer = CAScrollLayer()
+        yScrollLayer.scrollMode = .vertically
+        yScrollLayer.frame = CGRect.init(x: 0, y: yframe.minY + 30, width: yframe.maxX + 5, height: yframe.size.height - 30)
+        self.layer.addSublayer(yScrollLayer)
+        yScrollLayer.backgroundColor = UIColor.green.cgColor
         //TODO: 添加x轴
         let yArr = adapter.ysections
         for (index,ydata) in yArr.enumerated() {
-            let midY = (builder.ydistance ?? 25) * CGFloat(index + 1)
+            let midY = (builder.ydistance ?? default_ydistance) * CGFloat(index + 1)
             let linelayer = CALayer()
-            linelayer.frame = CGRect.init(x: 0, y: scrolllayer.frame.height - midY, width: 5, height: 1)
+            linelayer.frame = CGRect.init(x: xframe.minX, y: yScrollLayer.frame.height - midY, width: 5, height: 1)
             linelayer.backgroundColor = builder.xbgColor ?? default_color.cgColor
-            scrolllayer.addSublayer(linelayer)
+            yScrollLayer.addSublayer(linelayer)
 
             let yTextLayer = CATextLayer()
             yTextLayer.string = "\(ydata)"
             yTextLayer.fontSize = 12
-            yTextLayer.bounds = CGRect.init(x: 0, y: 0, width: 15, height: 15)
-            yTextLayer.position = CGPoint.init(x: yframe.minX - 7 - 15, y: scrolllayer.frame.height - midY + (yframe.maxY - (builder.ydistance ?? 25) * CGFloat(adapter.ysections.count)))
+            yTextLayer.bounds = CGRect.init(x: 0, y: 0, width: 20, height: 15)
+            yTextLayer.position = CGPoint.init(x: 15, y: yScrollLayer.frame.height - midY)
             yTextLayer.foregroundColor = builder.xUnitTextColor ?? (builder.xbgColor ?? UIColor.black.cgColor)
             yTextLayer.alignmentMode = .center
             yTextLayer.contentsScale = UIScreen.main.scale
-            self.layer.addSublayer(yTextLayer)
+            yScrollLayer.addSublayer(yTextLayer)
         }
-
     }
 
     private func drawData() {
-
 
         let dataLayer = CAShapeLayer()
 
         let path = UIBezierPath()
         path.move(to: CGPoint.init(x: 0, y: scrollLayer.frame.height))
         for (index,data) in adapter.datas.enumerated() {
-            let x = CGFloat(builder.ydistance ?? 25) * CGFloat(index + 1)
-            let y = scrollLayer.frame.size.height * (1 - CGFloat(data.1.doubleValue/adapter.ysections[adapter.ysections.count - 1].doubleValue))
+            let x = CGFloat(builder.xdistance ?? default_xdistance) * CGFloat(index + 1)
+            let y = yScrollLayer.frame.height - (((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count)) * (CGFloat(data.1.doubleValue/adapter.ysections[adapter.ysections.count - 1].doubleValue)))
             path.addLine(to: CGPoint.init(x: x, y: CGFloat(y)))
         }
 
@@ -203,7 +244,7 @@ class BrokenLineView: UIView {
         dataLayer.lineWidth = builder.lineWidth ?? 1
        // dataLayer.lineJoin = .round
         if let _ = builder.lineColor {
-            
+
         }else {
             dataLayer.strokeColor = UIColor.black.cgColor
         }
@@ -227,16 +268,55 @@ class BrokenLineView: UIView {
         if adapter == nil {
             fatalError("请设置适配器")
         }
+        drawMainLayer()
+        drawXUnitData()
+        drawYUnitData()
+        drawData()
         if animated {
-            drawUnitData()
-            drawData()
             drawAnimation()
-        }else {
-            drawUnitData()
-            drawData()
         }
 
     }
 
 }
 
+extension BrokenLineView {
+
+    @objc private func panGesture(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: self)
+        var offset = scrollLayer.bounds.origin
+        offset.x -= translation.x
+        offset.y -= translation.y
+
+
+
+        debugPrint(offset)
+        if offset.x <= 0 {
+            offset.x = 0
+        }
+        else if offset.x >= (builder.xdistance ?? default_xdistance) * CGFloat(adapter.xsections.count) - scrollLayer.frame.width + 10{
+            offset.x = (builder.xdistance ?? default_xdistance) * CGFloat(adapter.xsections.count) - scrollLayer.frame.width + 10
+        }
+
+        if offset.y >= -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height) {
+            offset.y = 0
+        }
+        else if offset.y <= -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height) {
+            offset.y = -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height)
+            if offset.y >= 0  {
+                offset.y = 0
+            }
+
+        }
+        //(builder.ydistance ?? default_xdistance) * CGFloat(adapter.ysections.count)
+        //
+        scrollLayer.scroll(to: offset)
+        xScrollLayer.scroll(to: CGPoint.init(x: offset.x, y: xScrollLayer.visibleRect.origin.y))
+        yScrollLayer.scroll(to: CGPoint.init(x: yScrollLayer.visibleRect.origin.x, y: offset.y))
+        sender.setTranslation(CGPoint.zero, in: self)
+    }
+
+
+
+
+}
