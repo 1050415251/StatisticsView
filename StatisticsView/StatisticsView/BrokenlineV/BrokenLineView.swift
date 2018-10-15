@@ -298,15 +298,11 @@ extension BrokenLineView {
             offset.x = (builder.xdistance ?? default_xdistance) * CGFloat(adapter.xsections.count) - scrollLayer.frame.width + 10
         }
 
-        if offset.y >= -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height) {
-            offset.y = 0
+        if offset.y <= -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height) - 10 {
+            offset.y = -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height) - 10
         }
-        else if offset.y <= -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height) {
-            offset.y = -((builder.ydistance ?? default_ydistance) * CGFloat(adapter.ysections.count) - yScrollLayer.frame.height)
-            if offset.y >= 0  {
-                offset.y = 0
-            }
-
+        if offset.y >= 0  {
+            offset.y = 0
         }
         //(builder.ydistance ?? default_xdistance) * CGFloat(adapter.ysections.count)
         //
