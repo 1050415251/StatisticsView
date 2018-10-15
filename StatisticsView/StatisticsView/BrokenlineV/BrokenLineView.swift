@@ -13,13 +13,6 @@ class BrokenLineView: UIView {
 
     var adapter: BrokenLineAdapter!
 
-    var xdistance: CGFloat!///   - xdistance: x轴间距
-    var ydistance: CGFloat!///   - ydistance: y轴间距
-    var lineWidth: CGFloat!///   - lineWidth: 线条宽度
-
-    var lineColor: Any! ///   - linecolor: 线条颜色Any类型 可传数组和单个颜色，如果请保持与数据长度相同
-
-
     var builder: BrokenLineBuilder!
 
     private var xLayer: CALayer!
@@ -192,7 +185,7 @@ class BrokenLineView: UIView {
 
     }
 
-     // TODO: 绘制yzhou数据
+     // TODO: 绘制Y轴数据
     private func drawYUnitData() {
 
         let point = builder.originPoint ?? CGPoint.init(x: 30, y: self.frame.height - 30)
@@ -206,7 +199,7 @@ class BrokenLineView: UIView {
         yScrollLayer.scrollMode = .vertically
         yScrollLayer.frame = CGRect.init(x: 0, y: yframe.minY + 30, width: yframe.maxX + 5, height: yframe.size.height - 30)
         self.layer.addSublayer(yScrollLayer)
-        yScrollLayer.backgroundColor = UIColor.green.cgColor
+
         //TODO: 添加x轴
         let yArr = adapter.ysections
         for (index,ydata) in yArr.enumerated() {
